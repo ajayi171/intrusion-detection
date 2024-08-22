@@ -34,7 +34,7 @@ referencing
 requests
 rich
 rpds-py
-scikit-learn==1.2.2
+scikit-learn
 scipy
 six
 smmap
@@ -49,4 +49,4 @@ typing_extensions
 tzdata
 urllib3
 watchdog
-xgboost==1.7.6
+xgboost
