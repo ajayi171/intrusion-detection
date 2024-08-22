@@ -34,7 +34,7 @@ referencing
 requests
 rich
 rpds-py
-scikit-learn
+scikit-learn==1.1.3
 scipy
 six
 smmap
