@@ -6,23 +6,22 @@ from numpy import hstack
 from numpy import vstack
 from numpy import asarray
 from PIL import Image
-import joblib
 
 st.title("Intrusion Detection App")
 
-att_model = joblib.load('att_model.pkl', 'rb')
-# intr_model = joblib.load(open('k_model.pkl', 'rb'))
-models = joblib.load('sl_model.pkl', 'rb')
-meta_model=joblib.load('meta_model.pkl', 'rb')
+att_model = pickle.load(open('att_model.pkl', 'rb'))
+# intr_model = pickle.load(open('k_model.pkl', 'rb'))
+models = pickle.load(open('sl_model.pkl', 'rb'))
+meta_model=pickle.load(open('meta_model.pkl', 'rb'))
 
-label_encoder2 = joblib.load('le2.pkl', 'rb')
-label_encoder4 = joblib.load('le4.pkl', 'rb')
+label_encoder2 = pickle.load(open('le2.pkl', 'rb'))
+label_encoder4 = pickle.load(open('le4.pkl', 'rb'))
 
-scaler1 = joblib.load('att_scal.pkl', 'rb')
+scaler1 = pickle.load(open('att_scal.pkl', 'rb'))
 
-scaler2 = joblib.load('scal.pkl', 'rb')
+scaler2 = pickle.load(open('scal.pkl', 'rb'))
 
-encoder = joblib.load('enc.pkl', 'rb')
+encoder = pickle.load(open('enc.pkl', 'rb'))
 data_new = pd.read_csv('app_data.csv')
 
 
