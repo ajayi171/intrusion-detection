@@ -9,7 +9,7 @@ from PIL import Image
 
 st.title("Intrusion Detection App")
 
-# att_model = pickle.load(open('att_model.pkl', 'rb'))
+att_model = pickle.load(open('att_model.pkl', 'rb'))
 # intr_model = pickle.load(open('k_model.pkl', 'rb'))
 models = pickle.load(open('sl_model.pkl', 'rb'))
 meta_model=pickle.load(open('meta_model.pkl', 'rb'))
