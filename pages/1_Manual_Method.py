@@ -6,7 +6,7 @@ from numpy import hstack
 from numpy import vstack
 from numpy import asarray
 from PIL import Image
-from sklearn.externals import joblib
+import joblib
 
 st.title("Intrusion Detection App")
 
