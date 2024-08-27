@@ -20,6 +20,7 @@ label_encoder4 = pickle.load(open('le4.pkl', 'rb'))
 scaler1 = pickle.load(open('att_scal.pkl', 'rb'))
 
 scaler2 = pickle.load(open('scal.pkl', 'rb'))
+scaler2 = pickle.load(open('scal.pkl', 'rb'))
 
 encoder = pickle.load(open('enc.pkl', 'rb'))
 data_new = pd.read_csv('app_data.csv')
