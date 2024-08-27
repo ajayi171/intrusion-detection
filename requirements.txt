@@ -45,9 +45,9 @@ threadpoolctl
 toml
 toolz
 tornado
-tshark
 typing_extensions
 tzdata
 urllib3
 watchdog
+wireshark
 xgboost
