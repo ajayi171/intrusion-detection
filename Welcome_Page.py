@@ -1,8 +1,6 @@
 import streamlit as st
 from PIL import Image
-import os
 
-os.system('apt install -y tshark')
 st.set_page_config(
     page_title="Hello",
     page_icon="👋",

@@ -45,6 +45,7 @@ threadpoolctl
 toml
 toolz
 tornado
+tshark
 typing_extensions
 tzdata
 urllib3
