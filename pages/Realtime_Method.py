@@ -1,3 +1,4 @@
+import os
 import asyncio
 import streamlit as st
 import pyshark
@@ -12,6 +13,7 @@ from numpy import asarray
 from PIL import Image
 from concurrent.futures import ThreadPoolExecutor
 
+os.environ['TSHARK_PATH'] = r'C:\Program Files\Wireshark\tshark.exe'
 
 # Define the columns for the DataFrame based on your packet data structure
 columns = [
@@ -119,14 +121,13 @@ def extract_packet_info(packet):
     except AttributeError as e:
         # st.write(f"Could not parse packet: {e}")
         return None
-# loop = asyncio.ProactorEventLoop()
-# asyncio.set_event_loop(loop)
-pyshark.tshark.tshark.get_tshark_path = lambda: r'C:\Program Files\Wireshark\tshark.exe'
+loop = asyncio.ProactorEventLoop()
+asyncio.set_event_loop(loop)
 def start_live_capture(interface, packet_count=100):
     """
     Start capturing packets and return a DataFrame with captured packet data.
     """
-    capture = pyshark.LiveCapture(interface=interface)
+    capture = pyshark.LiveCapture(interface=interface,eventloop=loop)
 
     packet_data = []
 
