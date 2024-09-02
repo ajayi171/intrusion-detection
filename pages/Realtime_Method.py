@@ -129,7 +129,7 @@ def start_live_capture(interface, packet_count=100):
     """
     Start capturing packets and return a DataFrame with captured packet data.
     """
-    capture = pyshark.LiveCapture(interface=interface,eventloop=loop)
+    capture = pyshark.LiveCapture(interface=interface,eventloop=loop,tshark_path='/home/adminuser/venv/bin/wireshark/tshark')
 
     packet_data = []
 
