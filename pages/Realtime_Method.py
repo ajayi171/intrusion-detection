@@ -121,7 +121,9 @@ def extract_packet_info(packet):
     except AttributeError as e:
         # st.write(f"Could not parse packet: {e}")
         return None
-loop = asyncio.ProactorEventLoop()
+# loop = asyncio.ProactorEventLoop()
+# asyncio.set_event_loop(loop)
+loop = asyncio.new_event_loop()
 asyncio.set_event_loop(loop)
 def start_live_capture(interface, packet_count=100):
     """
