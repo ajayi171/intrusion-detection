@@ -121,11 +121,12 @@ def extract_packet_info(packet):
         return None
 # loop = asyncio.ProactorEventLoop()
 # asyncio.set_event_loop(loop)
+pyshark.tshark.tshark.get_tshark_path = lambda: r'C:\Program Files\Wireshark\tshark.exe'
 def start_live_capture(interface, packet_count=100):
     """
     Start capturing packets and return a DataFrame with captured packet data.
     """
-    capture = pyshark.LiveCapture(interface=interface,tshark_path="C://Program Files//Wireshark//tshark.exe")
+    capture = pyshark.LiveCapture(interface=interface)
 
     packet_data = []
 
