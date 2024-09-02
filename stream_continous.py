@@ -231,3 +231,35 @@ if not st.session_state.dataframe.empty:
             st.warning(f"{attack[0]} Intrusion Detected")
             st.image("dz1.gif")
 
+
+
+# import streamlit as st
+# import pyshark
+
+# def main():
+#     st.title("Packet Capture with PyShark")
+
+#     # Select the network interface
+#     interfaces = pyshark.find_my_interfaces()
+#     interface = st.selectbox("Select a network interface", interfaces)
+
+#     if st.button("Start Capture"):
+#         try:
+#             # Start the packet capture
+#             capture = pyshark.LiveCapture(interface=interface)
+#             st.write(f"Capturing packets on interface: {interface}")
+
+#             for packet in capture.sniff_continuously():
+#                 # Display the packet details
+#                 st.write(f"Timestamp: {packet.sniff_timestamp}")
+#                 st.write(f"Protocol: {packet.highest_layer}")
+#                 st.write(f"Source: {packet.ip.src}")
+#                 st.write(f"Destination: {packet.ip.dst}")
+#                 st.write(f"Length: {packet.length} bytes")
+#                 st.write("---")
+
+#         except Exception as e:
+#             st.error(f"Error: {e}")
+
+# if __name__ == "__main__":
+#     main()
