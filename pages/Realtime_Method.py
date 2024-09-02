@@ -1,5 +1,6 @@
 import os
 import asyncio
+import pyshark.tshark
 import streamlit as st
 import pyshark
 import pandas as pd
@@ -12,6 +13,7 @@ from numpy import vstack
 from numpy import asarray
 from PIL import Image
 from concurrent.futures import ThreadPoolExecutor
+from pyshark import tshark
 
 os.environ['TSHARK_PATH'] = r'C:\Program Files\Wireshark\tshark.exe'
 
@@ -121,15 +123,14 @@ def extract_packet_info(packet):
     except AttributeError as e:
         # st.write(f"Could not parse packet: {e}")
         return None
-# loop = asyncio.ProactorEventLoop()
-# asyncio.set_event_loop(loop)
+
 loop = asyncio.new_event_loop()
 asyncio.set_event_loop(loop)
 def start_live_capture(interface, packet_count=100):
     """
     Start capturing packets and return a DataFrame with captured packet data.
     """
-    capture = pyshark.LiveCapture(interface=interface,eventloop=loop)
+    capture = pyshark.LiveCapture(interface=interface,eventloop=loop,tshark_path=os.environ['TSHARK_PATH'])
 
     packet_data = []
 
