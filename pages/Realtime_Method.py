@@ -119,14 +119,13 @@ def extract_packet_info(packet):
     except AttributeError as e:
         # st.write(f"Could not parse packet: {e}")
         return None
-    
-loop = asyncio.SelectorEventLoop()
+loop = asyncio.ProactorEventLoop()
 asyncio.set_event_loop(loop)
 def start_live_capture(interface, packet_count=100):
     """
     Start capturing packets and return a DataFrame with captured packet data.
     """
-    capture = pyshark.LiveCapture(interface=interface, tshark_path="C:\\Program Files\\Wireshark\\tshark.exe", eventloop=loop)
+    capture = pyshark.LiveCapture(interface=interface, eventloop=loop)
 
     packet_data = []
 
@@ -134,7 +133,6 @@ def start_live_capture(interface, packet_count=100):
         packet_info = extract_packet_info(packet)
         if packet_info:
             packet_data.append(packet_info)
-
     df = pd.DataFrame(packet_data, columns=columns)
     return df
 
@@ -142,30 +140,62 @@ def start_live_capture(interface, packet_count=100):
 st.title("Live Network Packet Capture")
 
 col3 = ['ct_state_ttl','rate','sttl','dmean','ct_dst_src_ltm',
-        'dload','ct_srv_src','sbytes','dur', 'sload', 'tcprtt',
+        'dload','ct_srv_src','sbytes','dur','sload', 'tcprtt','synack',
         'ct_srv_dst', 'dbytes', 'smean']
 
 col4 = ['ct_state_ttl','rate','sttl','dmean','ct_dst_src_ltm',
         'dload','ct_srv_src','sbytes','dur', 'sload', 'tcprtt',
         'ct_srv_dst', 'dbytes', 'smean','attack_cat']
 
-sf = ['dur', 'sbytes', 'dbytes', 'sttl', 'sload', 'dload', 
-     'smean', 'dmean', 'ct_srv_src', 'ct_srv_dst']
 
-sf2 =  ['sbytes', 'rate', 'sttl', 'sload', 'dload', 'tcprtt',
-    'smean', 'ct_state_ttl', 'ct_dst_src_ltm', 'ct_srv_dst']
+# col3 = ['ct_state_ttl','rate','sttl','dmean','ct_dst_src_ltm',
+#         'dload','ct_srv_src','sbytes','dur', 'sload', 'tcprtt',
+#         'ct_srv_dst', 'dbytes', 'smean','synack']
 
-tags = ['No. for each state according to specific range of values for source/destination time to live',
-'rate','Source to destination time to live value', 'Mean of the row packet size transmitted by the dst',
-'No of connections of the same source and the destination address in 100 connections according to the last time.',
-'Destination bits per second',
-'No. of connections that contain the same service and source address in 100 connections according to the last time.',
-'Number of data bytes transferred from source to destination in single connection',
-'duration of connection', 'Source bits per second','TCP connection setup round-trip time',
-'No. of connections that contain the same service and destination address in 100 connections according to the last time.',
-'Number of data bytes transferred from destination to source in single connection',
-'Mean of the row packet size transmitted by the source'
+# col4 = ['ct_state_ttl','rate','sttl','dmean','ct_dst_src_ltm',
+#         'dload','ct_srv_src','sbytes','dur', 'sload', 'tcprtt',
+#         'ct_srv_dst', 'dbytes', 'smean','attack_cat']
+
+# sf = ['sbytes', 'dbytes', 'sttl', 'sload', 'dload', 
+#      'smean', 'dmean', 'ct_srv_src', 'ct_srv_dst']
+
+# sf2 =  ['sbytes', 'rate', 'sttl', 'sload', 'dload', 'tcprtt',
+#     'smean', 'ct_state_ttl', 'ct_dst_src_ltm', 'ct_srv_dst']
+
+selected_features = ['sbytes', 'smean', 'ct_srv_dst', 'dbytes', 'ct_srv_src', 'dmean',
+       'sttl', 'sload', 'dload']
+selected_features1 = ['sttl', 'ct_dst_src_ltm', 'sbytes', 'ct_srv_dst', 'ct_state_ttl',
+       'smean', 'dload', 'synack', 'sload', 'rate']
+
+tags = [
+    'No. for each state according to specific range of values for source/destination time to live',  # ct_state_ttl
+    'Rate',  # rate
+    'Source to destination time to live value',  # sttl
+    'Mean of the row packet size transmitted by the destination',  # dmean
+    'No. of connections of the same source and destination address in 100 connections according to the last time',  # ct_dst_src_ltm
+    'Destination bits per second',  # dload
+    'No. of connections that contain the same service and source address in 100 connections according to the last time',  # ct_srv_src
+    'Number of data bytes transferred from source to destination in a single connection',  # sbytes
+    'duration of connection', # dur
+    'Source bits per second',  # sload
+    'TCP connection setup round-trip time',  # tcprtt
+    'SynAck',  # synack
+    'No. of connections that contain the same service and destination address in 100 connections according to the last time',  # ct_srv_dst
+    'Number of data bytes transferred from destination to source in a single connection',  # dbytes
+    'Mean of the row packet size transmitted by the source'  # smean
 ]
+
+# tags = ['No. for each state according to specific range of values for source/destination time to live',
+# 'rate','Source to destination time to live value', 'Mean of the row packet size transmitted by the dst',
+# 'No of connections of the same source and the destination address in 100 connections according to the last time.',
+# 'Destination bits per second',
+# 'No. of connections that contain the same service and source address in 100 connections according to the last time.',
+# 'Number of data bytes transferred from source to destination in single connection',
+# 'duration of connection', 'Source bits per second','TCP connection setup round-trip time',
+# 'No. of connections that contain the same service and destination address in 100 connections according to the last time.',
+# 'Number of data bytes transferred from destination to source in single connection',
+# 'Mean of the row packet size transmitted by the source',
+# ]
 
 
 # Initialize session state variables if they don't exist
@@ -226,8 +256,8 @@ def super_learner_predictions(X, models, meta_model):
     return meta_model.predict(meta_X)
 
 def prepare(data):
-    attack_df = data[sf]
-    intr_df = data[sf2]
+    attack_df = data[selected_features]
+    intr_df = data[selected_features1]
     attack_df = st.session_state.scaler1.transform(attack_df)
     intr_df = st.session_state.scaler2.transform(intr_df)
     return attack_df, intr_df
@@ -263,9 +293,38 @@ if not st.session_state.dataframe.empty:
     st.dataframe(new_d)
     feat2 = np.array(new_ddd).reshape(1,-1)
     feat2 = pd.DataFrame(feat2,columns=col3)
-    if st.button('Prediction'):
+    # del feat2['dur']
+    # if st.button('Prediction'):
+    #     try:
+    #         attack_df, intr_df = prepare(feat2)
+    #         pred = super_learner_predictions(intr_df, st.session_state.models, st.session_state.meta_model)
+    #         if pred[0] == 0:
+    #            st.write("Normal Activity Permission Granted")
+    #         else:
+    #             pred1 = st.session_state.att_model.predict(attack_df)
+    #             attack = st.session_state.label_encoder4.inverse_transform(pred1)
+    #             st.warning(f"{attack[0]} Intrusion Detected")
+    #             st.image("dz1.gif")
+
+    #     except Exception as err:
+    #         print(f"The error is {err}:---"*5)
+            
+    
+if st.button('Prediction'):
+    try:
+        # Convert 'False' and 'True' in feat2 to 0 and 1
+        feat2 = feat2.replace({'False': 0, 'True': 1})
+
+        # Ensure all data is numeric
+        feat2 = feat2.apply(pd.to_numeric, errors='coerce')
+
+        # Prepare the data
         attack_df, intr_df = prepare(feat2)
+
+        # Make predictions
         pred = super_learner_predictions(intr_df, st.session_state.models, st.session_state.meta_model)
+        
+        # Check the prediction result
         if pred[0] == 0:
             st.write("Normal Activity Permission Granted")
         else:
@@ -273,6 +332,10 @@ if not st.session_state.dataframe.empty:
             attack = st.session_state.label_encoder4.inverse_transform(pred1)
             st.warning(f"{attack[0]} Intrusion Detected")
             st.image("dz1.gif")
+
+    except Exception as err:
+        st.error(f"The error is: {err}")
+
 
 
 # row_num = st.number_input('Select Row, You would like to Predict', min_value=0, max_value=data2.shape[0]-1, step=1)

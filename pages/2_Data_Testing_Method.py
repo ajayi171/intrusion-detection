@@ -26,18 +26,28 @@ data_new = pd.read_csv('app_data.csv')
 
 
 col3 = ['ct_state_ttl','rate','sttl','dmean','ct_dst_src_ltm',
-        'dload','ct_srv_src','sbytes','dur', 'sload', 'tcprtt',
-        'ct_srv_dst', 'dbytes', 'smean']
+        'dload','ct_srv_src','sbytes', 'sload', 'tcprtt',
+        'ct_srv_dst', 'dbytes', 'smean','synack']
 
 col4 = ['ct_state_ttl','rate','sttl','dmean','ct_dst_src_ltm',
-        'dload','ct_srv_src','sbytes','dur', 'sload', 'tcprtt',
+        'dload','ct_srv_src','sbytes', 'sload', 'tcprtt',
         'ct_srv_dst', 'dbytes', 'smean','attack_cat']
 
-sf = ['dur', 'sbytes', 'dbytes', 'sttl', 'sload', 'dload', 
-     'smean', 'dmean', 'ct_srv_src', 'ct_srv_dst']
+# col3 = ['sbytes', 'dbytes', 'rate',
+#        'sttl','sload', 'dload','synack','tcprtt', 
+#        'smean', 'dmean','ct_srv_src', 'ct_state_ttl',
+#        'ct_dst_src_ltm','ct_srv_dst']
 
-sf2 =  ['sbytes', 'rate', 'sttl', 'sload', 'dload', 'tcprtt',
-    'smean', 'ct_state_ttl', 'ct_dst_src_ltm', 'ct_srv_dst']
+selected_features = ['sbytes', 'smean', 'ct_srv_dst', 'dbytes', 'ct_srv_src', 'dmean',
+       'sttl', 'sload', 'dload']
+selected_features1 = ['sttl', 'ct_dst_src_ltm', 'sbytes', 'ct_srv_dst', 'ct_state_ttl',
+       'smean', 'dload', 'synack', 'sload', 'rate']
+
+# sf = [ 'sbytes', 'dbytes', 'sttl', 'sload', 'dload', 
+#      'smean', 'dmean', 'ct_srv_src', 'ct_srv_dst']
+
+# sf2 =  ['sbytes', 'rate', 'sttl', 'sload', 'dload', 'tcprtt',
+#     'smean', 'ct_state_ttl', 'ct_dst_src_ltm', 'ct_srv_dst']
 
 tags = ['No. for each state according to specific range of values for source/destination time to live',
 'rate','Source to destination time to live value', 'Mean of the row packet size transmitted by the dst',
@@ -45,10 +55,11 @@ tags = ['No. for each state according to specific range of values for source/des
 'Destination bits per second',
 'No. of connections that contain the same service and source address in 100 connections according to the last time.',
 'Number of data bytes transferred from source to destination in single connection',
-'duration of connection', 'Source bits per second','TCP connection setup round-trip time',
+'Source bits per second','TCP connection setup round-trip time',
 'No. of connections that contain the same service and destination address in 100 connections according to the last time.',
 'Number of data bytes transferred from destination to source in single connection',
-'Mean of the row packet size transmitted by the source'
+'Mean of the row packet size transmitted by the source',
+'Syn-ack time'
 ]
 
 data2 = data_new[col3]
@@ -80,9 +91,9 @@ def super_learner_predictions(X, models, meta_model):
 
 def prepare(data):
 
-    attack_df = data[sf]
+    attack_df = data[selected_features]
     #attack_df['service'] = label_encoder2.transform(attack_df['service'])
-    intr_df = data[sf2]
+    intr_df = data[selected_features1]
 
     attack_df = scaler1.transform(attack_df)
     intr_df = scaler2.transform(intr_df)
@@ -106,4 +117,3 @@ if st.button('Prediction'):
 
 
         
-
