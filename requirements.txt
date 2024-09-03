@@ -34,6 +34,7 @@ referencing
 requests
 rich
 rpds-py
+scapy
 scikit-learn==1.3.2
 scipy
 six
