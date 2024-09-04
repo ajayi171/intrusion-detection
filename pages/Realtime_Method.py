@@ -191,17 +191,17 @@ def extract_packet_info(packet):
 
 
 
-loop = asyncio.new_event_loop()
+loop = asyncio.ProactorEventLoop()
 asyncio.set_event_loop(loop)
-def start_live_capture(interface, packet_count=5):
+def start_live_capture(interface, packet_count=100):
     """
     Start capturing packets and return a DataFrame with captured packet data.
     """
-    capture = pyshark.LiveCapture(interface=interface,eventloop=loop)
+    capture = pyshark.LiveCapture(interface='Wi-Fi',eventloop=loop)
     # capture = scapy.sniff(iface=interface, count=packet_count)
     packet_data = []
 
-    for i, packet in enumerate(capture):
+    for packet in capture.sniff_continuously(packet_count=packet_count):
         packet_info = extract_packet_info(packet)
         if packet_info:
             packet_data.append(packet_info)
@@ -340,7 +340,7 @@ if st.button("Start Capture") and not st.session_state['running']:
         progress_bar = st.progress(0)  # Initialize progress bar
      
         with ThreadPoolExecutor() as executor:
-            future = executor.submit(start_live_capture, 'Wi-Fi 2')
+            future = executor.submit(start_live_capture, 'Wi-Fi')
             df = future.result()
            
         st.session_state.dataframe = df

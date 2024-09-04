@@ -48,6 +48,6 @@ toolz
 tornado
 typing_extensions
 tzdata
-urllib3
+urllib3==2.2.2
 watchdog
 xgboost==2.1.1
