@@ -67,117 +67,56 @@ def detect_attack_category(packet):
 #     # Add more attack detection logic here
 #     return "Normal"
 
-# def extract_packet_info(packet):
-#     """
-#     Extract information from a packet based on the defined data structure.
-#     """
-#     try:
-#         proto = packet.highest_layer
-#         service = packet.layers[-1].layer_name if hasattr(packet, 'layers') else '-'
-#         state = packet.tcp.flags if 'TCP' in packet else '-'
-#         spkts = packet.tcp.stream if 'TCP' in packet else 0
-#         dpkts = packet.ip.len if 'IP' in packet else 0
-#         sbytes = int(packet.length)
-#         dbytes = int(packet.length)
-#         rate = float(packet.captured_length) / float(packet.sniff_time.timestamp()) if packet.sniff_time.timestamp() != 0 else 0
-#         sttl = int(packet.ip.ttl) if 'IP' in packet else 0
-#         dttl = int(packet.ip.ttl) if 'IP' in packet else 0
-#         sload = float(packet.length) * 8  # Convert bytes to bits
-#         dload = float(packet.length) * 8  # Convert bytes to bits
-#         sinpkt = packet.tcp.time_delta if 'TCP' in packet else 0
-#         dinpkt = packet.tcp.time_delta if 'TCP' in packet else 0
-#         sjit = packet.tcp.time_relative if 'TCP' in packet else 0
-#         djit = packet.tcp.time_relative if 'TCP' in packet else 0
-#         swin = packet.tcp.window_size if 'TCP' in packet else 0
-#         stcpb = packet.tcp.stream if 'TCP' in packet else 0
-#         dtcpb = packet.tcp.stream if 'TCP' in packet else 0
-#         dwin = packet.tcp.window_size if 'TCP' in packet else 0
-#         tcprtt = packet.tcp.analysis_ack_rtt if 'TCP' in packet else 0
-#         synack = packet.tcp.flags_syn if 'TCP' in packet else 0
-#         ackdat = packet.tcp.flags_ack if 'TCP' in packet else 0
-#         smean = int(packet.length) // 2
-#         dmean = int(packet.length) // 2
-#         trans_depth = 0
-#         response_body_len = 0
-#         ct_srv_src = 1
-#         ct_state_ttl = 1
-#         ct_dst_ltm = 1
-#         ct_src_dport_ltm = 1
-#         ct_dst_sport_ltm = 1
-#         ct_dst_src_ltm = 1
-#         is_ftp_login = 0
-#         ct_ftp_cmd = 0
-#         ct_flw_http_mthd = 0
-#         ct_src_ltm = 1
-#         ct_srv_dst = 1
-#         is_sm_ips_ports = 0
-#         attack_cat = detect_attack_category(packet)
-#         label = 1
-
-#         return (
-#             time.time(),  # Example packet id (timestamp)
-#             time.time() - float(packet.sniff_timestamp), proto, service, state,
-#             spkts, dpkts, sbytes, dbytes, rate, sttl, dttl, sload, dload, 0, 0, sinpkt,
-#             dinpkt, sjit, djit, swin, stcpb, dtcpb, dwin, tcprtt, synack, ackdat, smean,
-#             dmean, trans_depth, response_body_len, ct_srv_src, ct_state_ttl, ct_dst_ltm,
-#             ct_src_dport_ltm, ct_dst_sport_ltm, ct_dst_src_ltm, is_ftp_login, ct_ftp_cmd,
-#             ct_flw_http_mthd, ct_src_ltm, ct_srv_dst, is_sm_ips_ports, attack_cat, label
-#         )
-#     except AttributeError as e:
-#         # st.write(f"Could not parse packet: {e}")
-#         return None
-
-
 def extract_packet_info(packet):
     """
-    Extract information from a packet using scapy.
+    Extract information from a packet based on the defined data structure.
     """
     try:
-        proto = packet.lastlayer().name
-        service = packet.lastlayer().name
-        state = packet[TCP].flags if TCP in packet else '-'
-        spkts = len(packet[TCP].payload) if TCP in packet else 0
-        dpkts = len(packet[IP].payload) if IP in packet else 0
-        sbytes = len(packet)
-        dbytes = len(packet)
-        rate = sbytes / (time.time() - packet.time) if packet.time != 0 else 0
-        sttl = packet[IP].ttl if IP in packet else 0
-        dttl = packet[IP].ttl if IP in packet else 0
-        sload = float(sbytes) * 8  # Convert bytes to bits
-        dload = float(dbytes) * 8  # Convert bytes to bits
-        sinpkt = packet.time if TCP in packet else 0
-        dinpkt = packet.time if TCP in packet else 0
-        sjit = packet.time - packet.time if TCP in packet else 0  # Placeholder logic
-        djit = packet.time - packet.time if TCP in packet else 0  # Placeholder logic
-        swin = packet[TCP].window if TCP in packet else 0
-        stcpb = packet[TCP].seq if TCP in packet else 0
-        dtcpb = packet[TCP].ack if TCP in packet else 0
-        dwin = packet[TCP].window if TCP in packet else 0
-        tcprtt = packet[TCP].ack - packet[TCP].seq if TCP in packet else 0  # Placeholder logic
-        synack = 1 if (TCP in packet and packet[TCP].flags == 'SA') else 0
-        ackdat = 1 if (TCP in packet and packet[TCP].flags == 'A') else 0
-        smean = sbytes // 2
-        dmean = dbytes // 2
-        trans_depth = 0  # Placeholder, scapy does not provide this directly
-        response_body_len = 0  # Placeholder, scapy does not provide this directly
-        ct_srv_src = 1  # Placeholder
-        ct_state_ttl = 1  # Placeholder
-        ct_dst_ltm = 1  # Placeholder
-        ct_src_dport_ltm = 1  # Placeholder
-        ct_dst_sport_ltm = 1  # Placeholder
-        ct_dst_src_ltm = 1  # Placeholder
-        is_ftp_login = 0  # Placeholder
-        ct_ftp_cmd = 0  # Placeholder
-        ct_flw_http_mthd = 0  # Placeholder
-        ct_src_ltm = 1  # Placeholder
-        ct_srv_dst = 1  # Placeholder
-        is_sm_ips_ports = 0  # Placeholder
-        attack_cat = detect_attack_category(packet)  # Custom function
-        label = 1  # Placeholder for label
+        proto = packet.highest_layer
+        service = packet.layers[-1].layer_name if hasattr(packet, 'layers') else '-'
+        state = packet.tcp.flags if 'TCP' in packet else '-'
+        spkts = packet.tcp.stream if 'TCP' in packet else 0
+        dpkts = packet.ip.len if 'IP' in packet else 0
+        sbytes = int(packet.length)
+        dbytes = int(packet.length)
+        rate = float(packet.captured_length) / float(packet.sniff_time.timestamp()) if packet.sniff_time.timestamp() != 0 else 0
+        sttl = int(packet.ip.ttl) if 'IP' in packet else 0
+        dttl = int(packet.ip.ttl) if 'IP' in packet else 0
+        sload = float(packet.length) * 8  # Convert bytes to bits
+        dload = float(packet.length) * 8  # Convert bytes to bits
+        sinpkt = packet.tcp.time_delta if 'TCP' in packet else 0
+        dinpkt = packet.tcp.time_delta if 'TCP' in packet else 0
+        sjit = packet.tcp.time_relative if 'TCP' in packet else 0
+        djit = packet.tcp.time_relative if 'TCP' in packet else 0
+        swin = packet.tcp.window_size if 'TCP' in packet else 0
+        stcpb = packet.tcp.stream if 'TCP' in packet else 0
+        dtcpb = packet.tcp.stream if 'TCP' in packet else 0
+        dwin = packet.tcp.window_size if 'TCP' in packet else 0
+        tcprtt = packet.tcp.analysis_ack_rtt if 'TCP' in packet else 0
+        synack = packet.tcp.flags_syn if 'TCP' in packet else 0
+        ackdat = packet.tcp.flags_ack if 'TCP' in packet else 0
+        smean = int(packet.length) // 2
+        dmean = int(packet.length) // 2
+        trans_depth = 0
+        response_body_len = 0
+        ct_srv_src = 1
+        ct_state_ttl = 1
+        ct_dst_ltm = 1
+        ct_src_dport_ltm = 1
+        ct_dst_sport_ltm = 1
+        ct_dst_src_ltm = 1
+        is_ftp_login = 0
+        ct_ftp_cmd = 0
+        ct_flw_http_mthd = 0
+        ct_src_ltm = 1
+        ct_srv_dst = 1
+        is_sm_ips_ports = 0
+        attack_cat = detect_attack_category(packet)
+        label = 1
 
         return (
             time.time(),  # Example packet id (timestamp)
-            time.time() - packet.time, proto, service, state,
+            time.time() - float(packet.sniff_timestamp), proto, service, state,
             spkts, dpkts, sbytes, dbytes, rate, sttl, dttl, sload, dload, 0, 0, sinpkt,
             dinpkt, sjit, djit, swin, stcpb, dtcpb, dwin, tcprtt, synack, ackdat, smean,
             dmean, trans_depth, response_body_len, ct_srv_src, ct_state_ttl, ct_dst_ltm,
@@ -185,8 +124,69 @@ def extract_packet_info(packet):
             ct_flw_http_mthd, ct_src_ltm, ct_srv_dst, is_sm_ips_ports, attack_cat, label
         )
     except AttributeError as e:
-        print(f"Could not parse packet: {e}")
+        # st.write(f"Could not parse packet: {e}")
         return None
+
+
+# def extract_packet_info(packet):
+#     """
+#     Extract information from a packet using scapy.
+#     """
+#     try:
+#         proto = packet.lastlayer().name
+#         service = packet.lastlayer().name
+#         state = packet[TCP].flags if TCP in packet else '-'
+#         spkts = len(packet[TCP].payload) if TCP in packet else 0
+#         dpkts = len(packet[IP].payload) if IP in packet else 0
+#         sbytes = len(packet)
+#         dbytes = len(packet)
+#         rate = sbytes / (time.time() - packet.time) if packet.time != 0 else 0
+#         sttl = packet[IP].ttl if IP in packet else 0
+#         dttl = packet[IP].ttl if IP in packet else 0
+#         sload = float(sbytes) * 8  # Convert bytes to bits
+#         dload = float(dbytes) * 8  # Convert bytes to bits
+#         sinpkt = packet.time if TCP in packet else 0
+#         dinpkt = packet.time if TCP in packet else 0
+#         sjit = packet.time - packet.time if TCP in packet else 0  # Placeholder logic
+#         djit = packet.time - packet.time if TCP in packet else 0  # Placeholder logic
+#         swin = packet[TCP].window if TCP in packet else 0
+#         stcpb = packet[TCP].seq if TCP in packet else 0
+#         dtcpb = packet[TCP].ack if TCP in packet else 0
+#         dwin = packet[TCP].window if TCP in packet else 0
+#         tcprtt = packet[TCP].ack - packet[TCP].seq if TCP in packet else 0  # Placeholder logic
+#         synack = 1 if (TCP in packet and packet[TCP].flags == 'SA') else 0
+#         ackdat = 1 if (TCP in packet and packet[TCP].flags == 'A') else 0
+#         smean = sbytes // 2
+#         dmean = dbytes // 2
+#         trans_depth = 0  # Placeholder, scapy does not provide this directly
+#         response_body_len = 0  # Placeholder, scapy does not provide this directly
+#         ct_srv_src = 1  # Placeholder
+#         ct_state_ttl = 1  # Placeholder
+#         ct_dst_ltm = 1  # Placeholder
+#         ct_src_dport_ltm = 1  # Placeholder
+#         ct_dst_sport_ltm = 1  # Placeholder
+#         ct_dst_src_ltm = 1  # Placeholder
+#         is_ftp_login = 0  # Placeholder
+#         ct_ftp_cmd = 0  # Placeholder
+#         ct_flw_http_mthd = 0  # Placeholder
+#         ct_src_ltm = 1  # Placeholder
+#         ct_srv_dst = 1  # Placeholder
+#         is_sm_ips_ports = 0  # Placeholder
+#         attack_cat = detect_attack_category(packet)  # Custom function
+#         label = 1  # Placeholder for label
+
+#         return (
+#             time.time(),  # Example packet id (timestamp)
+#             time.time() - packet.time, proto, service, state,
+#             spkts, dpkts, sbytes, dbytes, rate, sttl, dttl, sload, dload, 0, 0, sinpkt,
+#             dinpkt, sjit, djit, swin, stcpb, dtcpb, dwin, tcprtt, synack, ackdat, smean,
+#             dmean, trans_depth, response_body_len, ct_srv_src, ct_state_ttl, ct_dst_ltm,
+#             ct_src_dport_ltm, ct_dst_sport_ltm, ct_dst_src_ltm, is_ftp_login, ct_ftp_cmd,
+#             ct_flw_http_mthd, ct_src_ltm, ct_srv_dst, is_sm_ips_ports, attack_cat, label
+#         )
+#     except AttributeError as e:
+#         print(f"Could not parse packet: {e}")
+#         return None
 
 
 
@@ -197,12 +197,11 @@ def start_live_capture(interface, packet_count=5):
     """
     Start capturing packets and return a DataFrame with captured packet data.
     """
-    # capture = pyshark.LiveCapture(interface=interface,eventloop=loop)
-    capture = scapy.sniff(iface=interface, count=packet_count)
+    capture = pyshark.LiveCapture(interface=interface,eventloop=loop)
+    # capture = scapy.sniff(iface=interface, count=packet_count)
     packet_data = []
 
     for i, packet in enumerate(capture):
-        print("Printing:---- ",i,packet)
         packet_info = extract_packet_info(packet)
         if packet_info:
             packet_data.append(packet_info)
