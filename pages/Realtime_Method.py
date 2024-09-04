@@ -190,14 +190,21 @@ def extract_packet_info(packet):
 
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> e4405fcd1a954ca2a9d9ba83c25d2f2bded11f4e
 loop = asyncio.ProactorEventLoop()
 asyncio.set_event_loop(loop)
 def start_live_capture(interface, packet_count=100):
     """
     Start capturing packets and return a DataFrame with captured packet data.
     """
+<<<<<<< HEAD
     capture = pyshark.LiveCapture(interface='Wi-Fi',eventloop=loop)
+=======
+    capture = pyshark.LiveCapture(interface='Wi-Fi 2',eventloop=loop)
+>>>>>>> e4405fcd1a954ca2a9d9ba83c25d2f2bded11f4e
     # capture = scapy.sniff(iface=interface, count=packet_count)
     packet_data = []
 
